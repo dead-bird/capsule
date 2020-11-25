@@ -1,0 +1,39 @@
+{
+	"name": "capsule",
+	"version": "1.0.0",
+	"description": "A Discord bot that lives in the past",
+	"main": "app/capsule.js",
+	"scripts": {
+		"prestart": "mocha test/env.js",
+		"start": "nodemon --exec babel-node src/capsule.js",
+		"serve": "npm run build && node dist/capsule.js",
+		"build": "babel src -d dist"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/dead-bird/capsule.git"
+	},
+	"keywords": [],
+	"readmeFilename": "README.md",
+	"license": "MIT License",
+	"devDependencies": {
+		"@babel/cli": "^7.2.3",
+		"@babel/core": "^7.2.2",
+		"@babel/node": "^7.2.2",
+		"@babel/plugin-transform-runtime": "^7.4.4",
+		"@babel/preset-env": "^7.3.1",
+		"nodemon": "^1.18.9"
+	},
+	"dependencies": {
+		"@babel/polyfill": "^7.4.4",
+		"@babel/runtime": "^7.4.5",
+		"chalk": "^2.4.2",
+		"discord.js": "^11.4.2",
+		"dotenv": "^6.2.0",
+		"jimp": "^0.6.0",
+		"mocha": "^5.2.0"
+	},
+	"engines": {
+		"node": ">=6"
+	}
+}
