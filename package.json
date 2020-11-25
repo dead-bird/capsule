@@ -5,8 +5,8 @@
   "main": "app/capsule.js",
   "scripts": {
     "prestart": "mocha test/env.js",
-    "start": "nodemon --exec babel-node src/capsule.js",
-    "dev": "npm run build && node dist/capsule.js",
+    "dev": "nodemon --exec babel-node src/capsule.js",
+    "serve": "npm run build && node dist/capsule.js",
     "build": "babel src -d dist"
   },
   "repository": {
