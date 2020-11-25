@@ -8,4 +8,10 @@ const log = {
   error: x => console.error(chalk.red(chalk.bold($), x)),
 };
 
-export default { log };
+/**
+ * Grab a day-month from a Date for yearless comparisons.
+ * @param {date} d a JavaScript Date
+ */
+const date = d => `${d.getDate()}-${d.getMonth() + 1}`;
+
+export default { log, date };
