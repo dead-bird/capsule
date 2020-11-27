@@ -23,15 +23,29 @@ bot.on('ready', () => {
           try {
             const pins = await messages.fetchPinned();
 
-            const archive = pins.filter(
-              ({ createdAt }) => core.date(createdAt) === compare
-            );
+            const archive = pins.reduce((pins, pin) => {
+              if (core.date(pin.createdAt) === compare) {
+                const year =
+                  new Date().getFullYear() - pin.createdAt.getFullYear();
 
-            if (archive.array().length) {
-              all.push(...archive);
+                let current = pins.find(p => p.year === year);
+
+                if (!current) {
+                  current = { year, messages: [] };
+
+                  pins.push(current);
+                }
+
+                current.messages.push(pin);
+              }
+
+              return pins;
+            }, []);
+
+            if (Object.entries(archive).length !== 0) {
+              all.push(archive);
             }
 
-            // const year = new Date().getFullYear() - message.createdAt.getFullYear();
             // `${year} year${year > 1 ? 's' : ''} ago, today`,
           } catch (e) {
             core.log.error(e);
@@ -43,10 +57,6 @@ bot.on('ready', () => {
       Promise.resolve([])
     );
 
-    console.log(x.length);
-
-    // x.forEach(a => {
-    //   console.log(a);
-    // });
+    console.log(x.flat().sort((a, b) => a.year - b.year));
   });
 });
