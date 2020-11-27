@@ -11,26 +11,42 @@ bot.on('warn', w => core.log.warn(w));
 bot.on('ready', () => {
   core.log.info('ready');
 
-  bot.guilds.cache.each(({ channels }) => {
-    channels.cache.each(async ({ type, messages }) => {
-      if (type !== 'text') {
-        return;
-      }
+  const date = new Date('2017-09-17T19:29:28.769Z');
+  const compare = core.date(date);
 
-      try {
-        const pins = await messages.fetchPinned();
+  bot.guilds.cache.each(async ({ channels }) => {
+    const x = await channels.cache.reduce(
+      async (allPromise, { type, messages }) => {
+        let all = await allPromise;
 
-        const date = core.date(new Date('2017-09-17T19:29:28.769Z'));
+        if (type === 'text') {
+          try {
+            const pins = await messages.fetchPinned();
 
-        // console.log(date);
-        pins
-          .filter(message => core.date(message.createdAt) === date)
-          .each(message => {
-            console.log(message.content);
-          });
-      } catch (e) {
-        core.log.error(e);
-      }
-    });
+            const archive = pins.filter(
+              ({ createdAt }) => core.date(createdAt) === compare
+            );
+
+            if (archive.array().length) {
+              all.push(...archive);
+            }
+
+            // const year = new Date().getFullYear() - message.createdAt.getFullYear();
+            // `${year} year${year > 1 ? 's' : ''} ago, today`,
+          } catch (e) {
+            core.log.error(e);
+          }
+        }
+
+        return all;
+      },
+      Promise.resolve([])
+    );
+
+    console.log(x.length);
+
+    // x.forEach(a => {
+    //   console.log(a);
+    // });
   });
 });
