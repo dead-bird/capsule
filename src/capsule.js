@@ -12,22 +12,19 @@ bot.on('ready', () => {
   core.log.info('ready');
 
   bot.guilds.cache.each(async ({ channels }) => {
-    const archive = (await getArchive(channels)) || [];
+    const archive = await getArchive(channels);
 
     const me = await bot.users.fetch('ID');
 
-    archive
-      .flat()
-      .sort((a, b) => a.year - b.year)
-      .forEach(archive => {
-        me.send(
-          `***${archive.year} year${archive.year > 1 ? 's' : ''} ago:***`
-        );
+    archive.forEach(archive => {
+      me.send(
+        `**📌  ${archive.year} year${archive.year > 1 ? 's' : ''} ago:**`
+      );
 
-        archive.messages.forEach(message => {
-          me.send(buildEmbed(message));
-        });
+      archive.messages.forEach(message => {
+        me.send(buildEmbed(message));
       });
+    });
   });
 });
 
@@ -36,7 +33,8 @@ bot.on('ready', () => {
  * @param {GuildChannelManager} channels
  */
 async function getArchive({ cache }) {
-  return cache.reduce(async (pins, { type, messages }) => {
+  // Grab pins from TextChannels
+  const archive = await cache.reduce(async (pins, { type, messages }) => {
     let all = await pins;
 
     if (type === 'text') {
@@ -49,6 +47,9 @@ async function getArchive({ cache }) {
 
     return all;
   }, Promise.resolve([]));
+
+  // Flatten the archive and sort it by Year
+  return (archive || []).flat().sort((a, b) => a.year - b.year);
 }
 
 /**
@@ -82,7 +83,7 @@ async function getPins(messages) {
   } catch (e) {
     core.log.error(e);
 
-    return {};
+    return [];
   }
 }
 
@@ -90,18 +91,20 @@ async function getPins(messages) {
  * Build a Discord Embed from a Message
  * @param {Message} message
  */
-function buildEmbed({ url, content, author, channel, createdAt }) {
-  // TODO grab attachment
+function buildEmbed({ attachments, url, content, author, channel, createdAt }) {
+  const { attachment } = attachments.first() || {};
+
   return new MessageEmbed({
     url,
     title: null,
-    color: 7506394,
+    color: '#2ecc71',
     timestamp: createdAt,
+    image: { url: attachment },
     footer: { text: `#${channel.name}` },
     description: `${content}\n\nPosted by <@${author.id}>`,
     author: {
       icon_url: author.displayAvatarURL(),
-      name: 'View Message 👉',
+      name: 'View Message  👉',
       url,
     },
   });
