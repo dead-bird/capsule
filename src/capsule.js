@@ -1,4 +1,5 @@
 import memories from './modules/memories';
+import { scheduleJob } from 'node-schedule';
 import { Client } from 'discord.js';
 import setup from './modules/setup';
 import dotenv from 'dotenv/config';
@@ -14,6 +15,8 @@ bot.on('warn', w => core.log.warn(w));
 bot.on('ready', () => {
   core.log.info('ready');
 
-  // This will run on a cron loop thing
+  // https://crontab.guru/#0_9_*_*_*
+  // scheduleJob('0 9 * * *', () => memories(bot));
+
   memories(bot);
 });
