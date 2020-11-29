@@ -14,4 +14,6 @@ const log = {
  */
 const date = d => `${d.getDate()}-${d.getMonth() + 1}`;
 
-export default { log, date };
+const targetChannel = 'memories';
+
+export default { targetChannel, log, date };
