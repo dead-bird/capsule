@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import { MessageEmbed, Client } from 'discord.js';
 import dotenv from 'dotenv/config';
 import core from './modules/core';
 
@@ -14,15 +14,19 @@ bot.on('ready', () => {
   bot.guilds.cache.each(async ({ channels }) => {
     const archive = (await getArchive(channels)) || [];
 
+    const me = await bot.users.fetch('ID');
+
     archive
       .flat()
       .sort((a, b) => a.year - b.year)
       .forEach(archive => {
-        console.log(
-          `${archive.year} year${
-            archive.year > 1 ? 's' : ''
-          } ago, today there were ${archive.messages.length} pins 📌`
+        me.send(
+          `***${archive.year} year${archive.year > 1 ? 's' : ''} ago:***`
         );
+
+        archive.messages.forEach(message => {
+          me.send(buildEmbed(message));
+        });
       });
   });
 });
@@ -80,4 +84,25 @@ async function getPins(messages) {
 
     return {};
   }
+}
+
+/**
+ * Build a Discord Embed from a Message
+ * @param {Message} message
+ */
+function buildEmbed({ url, content, author, channel, createdAt }) {
+  // TODO grab attachment
+  return new MessageEmbed({
+    url,
+    title: null,
+    color: 7506394,
+    timestamp: createdAt,
+    footer: { text: `#${channel.name}` },
+    description: `${content}\n\nPosted by <@${author.id}>`,
+    author: {
+      icon_url: author.displayAvatarURL(),
+      name: 'View Message 👉',
+      url,
+    },
+  });
 }
