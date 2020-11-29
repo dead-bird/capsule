@@ -16,4 +16,12 @@ const date = d => `${d.getDate()}-${d.getMonth() + 1}`;
 
 const targetChannel = 'memories';
 
-export default { targetChannel, log, date };
+/**
+ * Find our #memories channel
+ * @param {Discord.GuildChannelManager} channels
+ */
+const findTargetChannel = ({ cache }) => {
+  return cache.find(({ name }) => name === targetChannel);
+};
+
+export default { findTargetChannel, targetChannel, date, log };
