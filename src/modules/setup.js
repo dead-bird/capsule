@@ -1,12 +1,19 @@
 import core from './core';
 
-// Create a #memories channel when we join a server
-export default function run(guild) {
-  guild.me.hasPermission('ADMINISTRATOR')
+/**
+ * Create a #memories channel when we join a server
+ * @param {Discord.Guild} guild
+ */
+export default async function run(guild) {
+  return guild.me.hasPermission('ADMINISTRATOR')
     ? fullSetup(guild)
     : setupWithoutAdmin(guild);
 }
 
+/**
+ * Setup our channel
+ * @param {Discord.Guild} guild
+ */
 async function fullSetup(guild) {
   // Try and grab #memories
   let channel = core.findTargetChannel(guild.channels);
@@ -20,8 +27,14 @@ async function fullSetup(guild) {
   }
 
   channel.send(`Hello 👋🏻 I'll be posting memories here`);
+
+  return channel;
 }
 
+/**
+ * Ask an admin to setup our channel
+ * @param {Discord.Guild} guild
+ */
 function setupWithoutAdmin(guild) {
   // If we don't have perms to create #memories, try and find a #general channel
   const channel = guild.channels.cache.find(
@@ -39,4 +52,6 @@ function setupWithoutAdmin(guild) {
       `To get memories, please create a #${core.targetChannel} text channel in your ${guild.name} server and give me admin access 🙏`
     );
   }
+
+  return null;
 }
