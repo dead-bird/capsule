@@ -16,7 +16,7 @@ export default async function run(guild) {
  */
 async function fullSetup(guild) {
   // Try and grab #memories
-  let channel = core.findTargetChannel(guild.channels);
+  let channel = core.findTargetChannel(guild);
 
   // Create #memories channel & deny everyone access (admins will override this)
   if (!channel) {

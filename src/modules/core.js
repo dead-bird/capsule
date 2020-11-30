@@ -18,10 +18,10 @@ const targetChannel = 'memories';
 
 /**
  * Find our #memories channel
- * @param {Discord.GuildChannelManager} channels
+ * @param {Discord.Guild} guild
  */
-const findTargetChannel = ({ cache }) => {
-  return cache.find(({ name }) => name === targetChannel);
+const findTargetChannel = ({ channels }) => {
+  return channels.cache.find(({ name }) => name === targetChannel);
 };
 
 export default { findTargetChannel, targetChannel, date, log };
