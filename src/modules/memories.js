@@ -101,11 +101,10 @@ function buildEmbed({ attachments, url, content, author, channel, createdAt }) {
     timestamp: createdAt,
     image: { url: attachment },
     footer: { text: `#${channel.name}` },
-    description: `${content}\n\nPosted by <@${author.id}>`,
+    description: `${content}\nPosted by <@${author.id}>\n\n[🔍 View Message](${url})`,
     author: {
       icon_url: author.displayAvatarURL(),
-      name: 'View Message  👉',
-      url,
+      name: author.username,
     },
   });
 }
