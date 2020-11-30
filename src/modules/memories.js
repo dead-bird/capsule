@@ -1,4 +1,5 @@
 import { MessageEmbed } from 'discord.js';
+import setup from './setup';
 import core from './core';
 
 /**
@@ -6,22 +7,23 @@ import core from './core';
  * @param {Discord.Client} bot
  */
 export default function run(bot) {
-  bot.guilds.cache.each(async ({ channels }) => {
-    // console.log(channels.cache.find(({ name }) => name === core.targetChannel));
+  bot.guilds.cache.each(async guild => {
+    // Try and get the target, or try and create it
+    const channel = core.findTargetChannel(guild) || (await setup(guild));
 
-    // return;
+    // If we don;t have a channel at this point, the bot doesn't have full access :feelsbadman:
+    if (!channel) {
+      return;
+    }
 
-    const me = await bot.users.fetch('ID');
-    const archive = await getArchive(channels);
+    const archive = await getArchive(guild.channels);
 
     archive.forEach(({ messages, year }) => {
       // Send a date stamp
-      me.send(`**📌  ${year} year${year > 1 ? 's' : ''} ago:**`);
+      channel.send(`**📌  ${year} year${year > 1 ? 's' : ''} ago:**`);
 
       // Loop through messages in this year and send a fancy Embed
-      messages.forEach(message => {
-        me.send(buildEmbed(message));
-      });
+      messages.forEach(msg => channel.send(buildEmbed(msg)));
     });
   });
 }
@@ -55,7 +57,8 @@ async function getArchive({ cache }) {
  * @param {Discord.MessageManager} messages
  */
 async function getPins(messages) {
-  const date = new Date('2017-09-17T19:29:28.769Z');
+  // const date = new Date('2017-09-17T19:29:28.769Z');
+  const date = new Date('2018-09-26T19:29:28.769Z');
   const compare = core.date(date);
 
   try {
@@ -94,7 +97,6 @@ function buildEmbed({ attachments, url, content, author, channel, createdAt }) {
 
   return new MessageEmbed({
     url,
-    title: null,
     color: '#2ecc71',
     timestamp: createdAt,
     image: { url: attachment },
