@@ -15,8 +15,5 @@ bot.on('warn', w => core.log.warn(w));
 bot.on('ready', () => {
   core.log.info('ready');
 
-  // https://crontab.guru/#0_9_*_*_*
-  // scheduleJob('0 9 * * *', () => memories(bot));
-
-  memories(bot);
+  scheduleJob(core.cron, () => memories(bot));
 });

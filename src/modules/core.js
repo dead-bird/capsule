@@ -8,6 +8,9 @@ const log = {
   error: x => console.error(chalk.red(chalk.bold($), x)),
 };
 
+// https://crontab.guru/#0_9_*_*_*
+const cron = '0 9 * * *';
+
 /**
  * Grab a day-month from a Date for yearless comparisons.
  * @param {date} d a JavaScript Date
@@ -24,4 +27,4 @@ const findTargetChannel = ({ channels }) => {
   return channels.cache.find(({ name }) => name === targetChannel);
 };
 
-export default { findTargetChannel, targetChannel, date, log };
+export default { findTargetChannel, targetChannel, date, cron, log };
