@@ -35,6 +35,8 @@ export default function run(bot) {
 async function getArchive({ cache }) {
   // Grab pins from TextChannels
   const archive = await cache.reduce(async (pins, { type, messages }) => {
+    // As this is async/await, we're returning a Promise each time.
+    // Let's await it before continuing
     let all = await pins;
 
     if (type === 'text') {
