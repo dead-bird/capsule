@@ -59,9 +59,7 @@ async function getArchive({ cache }) {
  * @param {Discord.MessageManager} messages
  */
 async function getPins(messages) {
-  // const date = new Date('2017-09-17T19:29:28.769Z');
-  const date = new Date('2018-09-26T19:29:28.769Z');
-  const compare = core.date(date);
+  const compare = core.date(new Date());
 
   try {
     const pins = await messages.fetchPinned();
