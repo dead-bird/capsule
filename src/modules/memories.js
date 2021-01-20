@@ -50,8 +50,12 @@ async function getArchive({ cache }) {
     return all;
   }, Promise.resolve([]));
 
-  // Flatten the archive and sort it by Year
-  return (archive || []).flat().sort((a, b) => a.year - b.year);
+  if (archive && archive.length) {
+    // Flatten the archive and sort it by Year
+    return archive.flat().sort((a, b) => a.year - b.year);
+  }
+
+  return [];
 }
 
 /**
